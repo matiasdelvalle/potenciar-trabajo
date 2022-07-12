@@ -110,7 +110,7 @@ class UsuariosController extends Controller
 
         $d              = User::whereId($id)->with('roles')->first();
         $roles          = Role::all();
-        $funciones      = Funcion::get();
+        $funciones      = [];
         return view('admin.usuarios.show', compact('d', 'roles', 'funciones'));
     }
 
