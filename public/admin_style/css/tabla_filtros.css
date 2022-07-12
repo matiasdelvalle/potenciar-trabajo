@@ -1,0 +1,115 @@
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+	border-color: #fff transparent transparent transparent;
+}
+.select2-container--default .select2-selection--single {
+	border-radius: 0px;
+	background-color: #6babe5;
+	border-color: #ffffff;
+	border-width: 0px;
+}
+.select2-container .select2-selection--single {
+	height: 38px;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+	line-height: 3;
+	color:white;
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+	top: 5px;
+}
+th input[type=text]{
+	background-color:#6babe5;
+	color:white;
+}
+th input[type=text]:focus{
+	background-color:#fff;
+	color:#000;
+}	
+
+.table > thead >  tr.filter > td, .table > thead > tr.filter > th {
+	padding:0px;
+	margin:0px;
+	vertical-align: middle;
+}
+
+.encabezado::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+	color:    #fff;
+	text-align: center;
+}
+.encabezado:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+	color:    #fff;
+	opacity:  1;
+	text-align: center;
+}
+.encabezado::-moz-placeholder { /* Mozilla Firefox 19+ */
+	color:    #fff;
+	opacity:  1;
+	text-align: center;
+}
+.encabezado:-ms-input-placeholder { /* Internet Explorer 10-11 */
+	color:    #fff;
+	text-align: center;
+}
+.btn_filter{
+	margin: 3px;
+	padding: 5px;
+	line-height: 3;
+	font-size: 12px;
+	background-color: #6bace5;
+	cursor: pointer;
+	color:white;
+}
+.btn_filter a{
+	color:white;
+	margin-left: 5px;
+}
+.th_with_filter{
+	padding: 0px!important;
+}
+input{
+	border:0px!important;
+}
+.table > tbody > tr{
+	border-left:0px;
+}
+.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+	vertical-align: top;
+	border-top: 1px solid #ddd!important; 
+	border: 1px solid #ddd!important; 
+}
+.btn {
+	padding: 6px 12px;
+}
+.marquee {
+	position: absolute;
+	margin: 0;
+	width: 300px;
+	text-align: left;
+	-webkit-transform:translateX(0%);	
+	-moz-animation: marquee 15s linear infinite;
+	-webkit-animation: marquee 15s linear infinite;
+	animation: marquee 15s linear infinite;
+}
+
+@-webkit-keyframes marquee {
+	0%   { -webkit-transform: translateX(0%); }
+	50%   { -webkit-transform: translateX(-10%); }
+	100% { -webkit-transform: translateX(0%); }
+}
+@keyframes marquee {
+	0%{ 
+		-webkit-transform: translateX(0%);
+	}
+	50%{ 
+		-webkit-transform: translateX(-10%);
+	}
+	100% { 
+		-webkit-transform: translateX(0%);
+	}
+}
+.form-horizontal .select2-container--default .select2-selection--single {
+	border-radius: 0px;
+	background-color: #6babe5;
+	border-color: #ddd;
+	border-width: 1px;
+}

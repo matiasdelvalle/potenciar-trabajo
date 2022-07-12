@@ -1,0 +1,127 @@
+
+.pace {
+	-webkit-pointer-events: none;
+	pointer-events: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+.pace-inactive {
+	display: none;
+}
+
+.pace .pace-progress {
+	z-index: 99999!important;
+	background: #FF8F31;
+	position: fixed;
+	z-index: 2000;
+	top: 0;
+	right: 100%;
+	width: 100%;
+	height: 2px;
+}
+
+span.input-icon, span.input-help {
+   	display: block;
+   	position: relative;
+}
+.input-icon > [class*="fa-"], .input-icon > [class*="clip-"] {
+	bottom: 0;
+	color: #909090;
+	display: inline-block;
+	font-size: 14px;
+	left: 5px;
+	line-height: 35px;
+	padding: 0 3px;
+	position: absolute;
+	top: 0;
+	z-index: 2;
+}
+.input-icon > input {
+   	padding-left: 25px;
+   	padding-right: 6px;
+}
+
+	/* #Tablet (Portrait)
+================================================== */
+/* Note: Design for a width of 768px */
+/*
+@media all and (min-width: 768px) and (max-width: 959px) {
+    th.col_1, td.col_1{
+        display:none;
+		width:0;
+		height:0;
+		opacity:0;
+		visibility: collapse;		
+    } 
+}
+*/
+/* #Mobile (Landscape)
+================================================== */
+/* Note: Design for a width of 600px */
+/*
+@media all and (min-width: 600px) and (max-width: 767px) {
+    th.col_2, td.col_2{
+        display:none;
+		width:0;
+		height:0;
+		opacity:0;
+		visibility: collapse
+    } 
+}
+*/
+/* #Mobile (Landscape)
+================================================== */
+/* Note: Design for a width of 480px */
+/*
+@media all and (min-width: 480px) and (max-width: 599px) {
+    th.col_3, td.col_3{
+        display:none;
+		width:0;
+		height:0;
+		opacity:0;
+		visibility: collapse
+    } 
+}
+*/
+/*  #Mobile (Portrait)
+================================================== */
+/* Note: Design for a width of 320px */
+/*
+@media all and (max-width: 479px) {
+    th.col_4, td.col_4{
+        display:none;
+		width:0;
+		height:0;
+		opacity:0;
+		visibility: collapse
+    }    
+}
+table tbody tr {
+    cursor: pointer;
+}
+*/
+
+
+.nav > li > a:hover > i {
+    -webkit-transform: scale(2.3);
+    color: #ffffff;
+}
+.slide-tools{
+	height: auto;
+	position: fixed;
+	width: 100%;
+	z-index: 14;
+	bottom: 0;
+	background-color: #4f9adb;
+	color: #ffffff;
+	font-size: 13px;
+	border-top: 1px solid #ccc;
+	font-family:'Roboto Condensed', sans-serif
+}
+.btn-aprobar {
+    color: #ffffff;
+    background-color: #6babe4;
+    border-color: #6babe4;
+}
