@@ -22,7 +22,7 @@ class AdminController extends Controller
     }    
 
     public function index(){
-        return Redirect::to('acreditaciones'); 
+        return Redirect::to('admin'); 
     }
 
     public function download($file){

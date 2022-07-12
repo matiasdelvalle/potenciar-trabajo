@@ -183,7 +183,7 @@ class UsuariosController extends Controller
                     'id'   => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
-                    'url' => Cache::get('user-is-lastview-'.$user->id)
+                    'url'   => Cache::get('user-is-lastview-'.$user->id)
                 );
             }
         }
