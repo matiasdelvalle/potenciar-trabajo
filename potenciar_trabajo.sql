@@ -26,6 +26,22 @@ CREATE TABLE `audit_cambios` (
 
 /*Data for the table `audit_cambios` */
 
+/*Table structure for table `cat_boques_estructuras` */
+
+CREATE TABLE `cat_boques_estructuras` (
+  `bloque_estructura_id` int(11) NOT NULL AUTO_INCREMENT,
+  `descripcion` varchar(100) DEFAULT NULL,
+  `detalle` varchar(500) DEFAULT NULL,
+  `estado_registro_id` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`bloque_estructura_id`),
+  KEY `FK_cat_boques_estructuras` (`estado_registro_id`),
+  CONSTRAINT `FK_cat_boques_estructuras` FOREIGN KEY (`estado_registro_id`) REFERENCES `cat_estados_registros` (`estado_registro_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+/*Data for the table `cat_boques_estructuras` */
+
+insert  into `cat_boques_estructuras`(`bloque_estructura_id`,`descripcion`,`detalle`,`estado_registro_id`) values (1,'Listado Simple',NULL,1),(2,'Tabla Horizontal',NULL,1);
+
 /*Table structure for table `cat_encuestas_estado` */
 
 CREATE TABLE `cat_encuestas_estado` (
@@ -162,20 +178,24 @@ insert  into `encuestas`(`encuesta_id`,`descripcion`,`detalle`,`estado_encuesta_
 CREATE TABLE `encuestas_bloques` (
   `bloque_id` int(11) NOT NULL AUTO_INCREMENT,
   `encuesta_id` int(11) NOT NULL,
+  `bloque_estructura_id` int(11) NOT NULL DEFAULT '1',
   `titulo` varchar(200) DEFAULT NULL,
   `estado_registro_id` int(11) NOT NULL DEFAULT '1',
   `orden` int(11) NOT NULL DEFAULT '100',
   `detalle` text,
+  `visible` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`bloque_id`),
   KEY `FK_encuestas_bloques` (`encuesta_id`),
   KEY `FK_encuestas_bloques_reg` (`estado_registro_id`),
+  KEY `FK_encuestas_bloques_bq` (`bloque_estructura_id`),
   CONSTRAINT `FK_encuestas_bloques` FOREIGN KEY (`encuesta_id`) REFERENCES `encuestas` (`encuesta_id`),
+  CONSTRAINT `FK_encuestas_bloques_bq` FOREIGN KEY (`bloque_estructura_id`) REFERENCES `cat_boques_estructuras` (`bloque_estructura_id`),
   CONSTRAINT `FK_encuestas_bloques_reg` FOREIGN KEY (`estado_registro_id`) REFERENCES `cat_estados_registros` (`estado_registro_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 /*Data for the table `encuestas_bloques` */
 
-insert  into `encuestas_bloques`(`bloque_id`,`encuesta_id`,`titulo`,`estado_registro_id`,`orden`,`detalle`) values (1,1,'Datos Personales del Titular PT',1,100,NULL),(2,1,'I. Datos Sociodemográficos del hogar   ',1,100,NULL),(3,1,'II. Actividad bajo programa (Contraprestación)',1,100,NULL),(4,1,'III. Capacitación y aptitudes',1,100,NULL),(5,1,'IV. Actividad por fuera del Programa ',1,100,NULL),(6,1,'SÓLO PARA MUJERES CON NIÑOS Y NIÑAS MENORES DE 12 AÑOS',1,100,'Verificar: Si la persona encuestada es mujer con hijos menores de 12 años, continuar, si no, agradecer y finalizar encuesta');
+insert  into `encuestas_bloques`(`bloque_id`,`encuesta_id`,`bloque_estructura_id`,`titulo`,`estado_registro_id`,`orden`,`detalle`,`visible`) values (1,1,1,'Datos Personales del Titular PT',1,100,NULL,1),(2,1,1,'I. Datos Sociodemográficos del hogar   ',1,100,NULL,1),(3,1,1,'II. Actividad bajo programa (Contraprestación)',1,100,NULL,1),(4,1,1,'III. Capacitación y aptitudes',1,100,NULL,1),(5,1,1,'IV. Actividad por fuera del Programa ',1,100,NULL,1),(6,1,1,'SÓLO PARA MUJERES CON NIÑOS Y NIÑAS MENORES DE 12 AÑOS',1,100,'Verificar: Si la persona encuestada es mujer con hijos menores de 12 años, continuar, si no, agradecer y finalizar encuesta',1);
 
 /*Table structure for table `migrations` */
 
@@ -242,7 +262,11 @@ CREATE TABLE `personas` (
   `apellidos` varchar(100) DEFAULT NULL,
   `nacionalidad_id` int(11) DEFAULT NULL,
   `fecha_nac` date DEFAULT NULL,
-  PRIMARY KEY (`persona_id`)
+  PRIMARY KEY (`persona_id`),
+  KEY `FK_personas` (`estado_registro_id`),
+  KEY `FK_personas_pais` (`nacionalidad_id`),
+  CONSTRAINT `FK_personas` FOREIGN KEY (`estado_registro_id`) REFERENCES `cat_estados_registros` (`estado_registro_id`),
+  CONSTRAINT `FK_personas_pais` FOREIGN KEY (`nacionalidad_id`) REFERENCES `cat_paises` (`pais_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `personas` */
@@ -262,9 +286,11 @@ CREATE TABLE `pregunta_opciones` (
   CONSTRAINT `FK_pregunta_opciones` FOREIGN KEY (`estado_registro_id`) REFERENCES `cat_estados_registros` (`estado_registro_id`),
   CONSTRAINT `FK_pregunta_opciones_op` FOREIGN KEY (`opcion_estructura_id`) REFERENCES `cat_opciones_estructuras` (`opcion_estructura_id`),
   CONSTRAINT `FK_pregunta_opciones_preg` FOREIGN KEY (`pregunta_id`) REFERENCES `preguntas` (`pregunta_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 /*Data for the table `pregunta_opciones` */
+
+insert  into `pregunta_opciones`(`opcion_id`,`pregunta_id`,`opcion`,`opcion_estructura_id`,`estado_registro_id`) values (1,1,'Ninguno',1,1),(2,1,'Primario Incompleto',1,1),(3,1,'Primario',1,1),(4,1,'Secundario Incompleto',1,1),(5,1,'Secunadario Completo',1,1),(6,1,'Terciario',1,1),(7,1,'Universitario Incompleto',1,1),(8,1,'Universitario',1,1);
 
 /*Table structure for table `preguntas` */
 
@@ -276,6 +302,7 @@ CREATE TABLE `preguntas` (
   `pregunta_tipo_id` int(11) NOT NULL,
   `pregunta_estructura_id` int(11) NOT NULL,
   `funcion` varchar(50) DEFAULT NULL,
+  `mascara` varchar(50) DEFAULT NULL,
   `orden` int(11) NOT NULL DEFAULT '100',
   PRIMARY KEY (`pregunta_id`),
   KEY `FK_preguntas` (`pregunta_tipo_id`),
@@ -284,11 +311,11 @@ CREATE TABLE `preguntas` (
   CONSTRAINT `FK_preguntas` FOREIGN KEY (`pregunta_tipo_id`) REFERENCES `preguntas_tipos` (`pregunta_tipo_id`),
   CONSTRAINT `FK_preguntas_bloq` FOREIGN KEY (`bloque_id`) REFERENCES `encuestas_bloques` (`bloque_id`),
   CONSTRAINT `FK_preguntas_encuesta` FOREIGN KEY (`encuesta_id`) REFERENCES `encuestas` (`encuesta_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 /*Data for the table `preguntas` */
 
-insert  into `preguntas`(`pregunta_id`,`encuesta_id`,`bloque_id`,`pregunta`,`pregunta_tipo_id`,`pregunta_estructura_id`,`funcion`,`orden`) values (1,1,1,'Nivel de Escolaridad Alcanzado',1,3,NULL,20),(2,1,1,'Dirección	',1,2,NULL,30),(3,1,1,'Provincia',1,3,'provincias',40),(4,1,1,'Municipio',1,3,'municipios',50),(5,1,1,'Localidad',1,3,'localidades',60),(6,1,1,'Teléfono particular',1,2,NULL,70),(7,1,1,'Teléfono de contacto',1,2,NULL,80);
+insert  into `preguntas`(`pregunta_id`,`encuesta_id`,`bloque_id`,`pregunta`,`pregunta_tipo_id`,`pregunta_estructura_id`,`funcion`,`mascara`,`orden`) values (1,1,1,'Nivel de Escolaridad Alcanzado',1,3,NULL,NULL,20),(2,1,1,'Dirección	',1,2,NULL,NULL,30),(3,1,1,'Provincia',1,3,'provincias',NULL,40),(4,1,1,'Municipio',1,3,'municipios',NULL,50),(5,1,1,'Localidad',1,3,'localidades',NULL,60),(6,1,1,'Teléfono particular',1,2,NULL,NULL,70),(7,1,1,'Teléfono de contacto',1,2,NULL,NULL,80),(8,1,1,'Email',1,2,NULL,'mail',90);
 
 /*Table structure for table `preguntas_estructuras` */
 
@@ -301,7 +328,7 @@ CREATE TABLE `preguntas_estructuras` (
 
 /*Data for the table `preguntas_estructuras` */
 
-insert  into `preguntas_estructuras`(`pregunta_estructura_id`,`descripcion`,`detalle`,`estado_registro_id`) values (1,'Si/No',NULL,1),(2,'Respuesta Texto',NULL,1),(3,'Opcional',NULL,1);
+insert  into `preguntas_estructuras`(`pregunta_estructura_id`,`descripcion`,`detalle`,`estado_registro_id`) values (1,'Si/No',NULL,1),(2,'Respuesta Texto',NULL,1),(3,'Opcional',NULL,1),(4,'Respuesta Numero',NULL,1),(5,'Date',NULL,1);
 
 /*Table structure for table `preguntas_tipos` */
 
