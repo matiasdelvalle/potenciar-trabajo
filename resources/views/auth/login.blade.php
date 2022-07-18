@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'App') }}</title>
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -83,8 +83,8 @@
                         </div>
                         @endif
 
-                        <h3>Dirección de Registros Jurisdiccionales</h3>
-                        <p>Desarrollo Social</p>
+                        <h3>{{ env('APP_NAME', 'App') }}</h3>
+                        <p>{{ env('APP_EMPRESA', 'App') }}</p>
                         <form class="form-horizontal" method="POST" action="{{ route('login') }}" style="text-align:left;">
                                 
                             {{ csrf_field() }}
@@ -121,9 +121,11 @@
                                 </div>
                             </div>
                             
+                             @if (env('CONFIG_REMEMBER_PASSWORD', '1') == 1)
                             <div style="padding-left: 15px;" class="form-group">
                                 <a href="{{ route('password.request') }}" class="text-center"><h6>¿Olvidaste tu contraseña? </h6></a>
                             </div>
+                            @endif
                         </form>
                     </div>
                 </div>
