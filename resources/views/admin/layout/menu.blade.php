@@ -26,7 +26,16 @@
                             <i class="fa-solid fa-users"></i><span>Grupos</span>
                             </a>
                         </li>               
-                        @endcan             
+                        @endcan   
+
+                        @can('editar_permisos')
+                        <li class="{{ Request::is('permisos')  || Request::is('permisos/*')  ? 'active' : '' }}">
+                            <a href="{{ url('permisos') }}">
+                            <i class="fa-solid fa-users"></i><span>Permisos</span>
+                            </a>
+                        </li>               
+                        @endcan   
+                        
                         <li class="{{ Request::is('logs') ? 'active' : '' }}">
                             <a href="{{ url('logs') }}">
                             <i class="fa-solid fa-file-contract"></i> <span>Logs</span>
