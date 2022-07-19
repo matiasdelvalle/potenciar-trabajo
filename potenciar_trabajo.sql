@@ -1,6 +1,6 @@
 /*
 SQLyog Ultimate v8.61 
-MySQL - 5.7.36 : Database - potenciar
+MySQL - 5.5.5-10.5.15-MariaDB-0+deb11u1 : Database - potenciar
 *********************************************************************
 */
 
@@ -16,15 +16,34 @@ MySQL - 5.7.36 : Database - potenciar
 
 CREATE TABLE `audit_cambios` (
   `audit_cambios_id` int(11) NOT NULL AUTO_INCREMENT,
-  `fecha_hora` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `fecha_hora` timestamp NOT NULL DEFAULT current_timestamp(),
   `accion` varchar(1) DEFAULT NULL,
   `tabla` varchar(50) DEFAULT NULL,
-  `tabla_id` int(11) DEFAULT '0',
-  `registro` text,
+  `tabla_id` int(11) DEFAULT 0,
+  `registro` text DEFAULT NULL,
   PRIMARY KEY (`audit_cambios_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `audit_cambios` */
+
+/*Table structure for table `audit_posts` */
+
+CREATE TABLE `audit_posts` (
+  `audit_post_id` bigint(30) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) DEFAULT NULL,
+  `fechahora` timestamp NOT NULL DEFAULT current_timestamp(),
+  `data` text DEFAULT NULL,
+  `estado_post_id` int(11) NOT NULL DEFAULT 1,
+  `error_descripcion` varchar(200) DEFAULT NULL,
+  `error_fechahora` date DEFAULT NULL,
+  PRIMARY KEY (`audit_post_id`),
+  KEY `FK_audit_posts` (`estado_post_id`),
+  KEY `FK_audit_posts_u` (`user_id`),
+  CONSTRAINT `FK_audit_posts` FOREIGN KEY (`estado_post_id`) REFERENCES `cat_estados_posts` (`post_estado_id`),
+  CONSTRAINT `FK_audit_posts_u` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+/*Data for the table `audit_posts` */
 
 /*Table structure for table `cat_boques_estructuras` */
 
@@ -32,7 +51,7 @@ CREATE TABLE `cat_boques_estructuras` (
   `bloque_estructura_id` int(11) NOT NULL AUTO_INCREMENT,
   `descripcion` varchar(100) DEFAULT NULL,
   `detalle` varchar(500) DEFAULT NULL,
-  `estado_registro_id` int(11) NOT NULL DEFAULT '1',
+  `estado_registro_id` int(11) NOT NULL DEFAULT 1,
   PRIMARY KEY (`bloque_estructura_id`),
   KEY `FK_cat_boques_estructuras` (`estado_registro_id`),
   CONSTRAINT `FK_cat_boques_estructuras` FOREIGN KEY (`estado_registro_id`) REFERENCES `cat_estados_registros` (`estado_registro_id`)
@@ -54,6 +73,21 @@ CREATE TABLE `cat_encuestas_estado` (
 /*Data for the table `cat_encuestas_estado` */
 
 insert  into `cat_encuestas_estado`(`estado_encuesta_id`,`descripcion`,`detalle`) values (1,'Pendiente',NULL),(2,'Activa',NULL),(3,'Cerrada',NULL),(4,'Suspendida',NULL);
+
+/*Table structure for table `cat_estados_posts` */
+
+CREATE TABLE `cat_estados_posts` (
+  `post_estado_id` int(11) NOT NULL AUTO_INCREMENT,
+  `descripcion` varchar(50) DEFAULT NULL,
+  `estado_registro_id` int(11) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`post_estado_id`),
+  KEY `FK_cat_estados_posts` (`estado_registro_id`),
+  CONSTRAINT `FK_cat_estados_posts` FOREIGN KEY (`estado_registro_id`) REFERENCES `cat_estados_registros` (`estado_registro_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+
+/*Data for the table `cat_estados_posts` */
+
+insert  into `cat_estados_posts`(`post_estado_id`,`descripcion`,`estado_registro_id`) values (1,'Pendiente',1),(2,'Procesada',1),(3,'Error Proceso',1);
 
 /*Table structure for table `cat_estados_registros` */
 
@@ -106,7 +140,7 @@ insert  into `cat_municipios`(`id`,`nombre`,`provinciaid`) values (1,'COMUNA 1',
 CREATE TABLE `cat_opciones_estructuras` (
   `opcion_estructura_id` int(11) NOT NULL AUTO_INCREMENT,
   `descripcion` varchar(100) DEFAULT NULL,
-  `estado_registro_id` int(11) NOT NULL DEFAULT '1',
+  `estado_registro_id` int(11) NOT NULL DEFAULT 1,
   PRIMARY KEY (`opcion_estructura_id`),
   KEY `FK_cat_opciones_estructuras` (`estado_registro_id`),
   CONSTRAINT `FK_cat_opciones_estructuras` FOREIGN KEY (`estado_registro_id`) REFERENCES `cat_estados_registros` (`estado_registro_id`)
@@ -121,7 +155,7 @@ insert  into `cat_opciones_estructuras`(`opcion_estructura_id`,`descripcion`,`es
 CREATE TABLE `cat_paises` (
   `pais_id` int(11) NOT NULL AUTO_INCREMENT,
   `pais` varchar(100) DEFAULT NULL,
-  `estado_registro_id` int(11) NOT NULL DEFAULT '1',
+  `estado_registro_id` int(11) NOT NULL DEFAULT 1,
   PRIMARY KEY (`pais_id`),
   KEY `FK_cat_paises` (`estado_registro_id`),
   CONSTRAINT `FK_cat_paises` FOREIGN KEY (`estado_registro_id`) REFERENCES `cat_estados_registros` (`estado_registro_id`)
@@ -151,10 +185,10 @@ insert  into `cat_provincias`(`id`,`nombre`,`pais_id`) values (2,'CIUDAD AUTONOM
 CREATE TABLE `encuestas` (
   `encuesta_id` int(11) NOT NULL AUTO_INCREMENT,
   `descripcion` varchar(100) DEFAULT NULL,
-  `detalle` text,
-  `estado_encuesta_id` int(11) NOT NULL DEFAULT '2',
-  `estado_registro_id` int(11) NOT NULL DEFAULT '1',
-  `audit_fecha_alta` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `detalle` text DEFAULT NULL,
+  `estado_encuesta_id` int(11) NOT NULL DEFAULT 2,
+  `estado_registro_id` int(11) NOT NULL DEFAULT 1,
+  `audit_fecha_alta` timestamp NOT NULL DEFAULT current_timestamp(),
   `audit_user_alta` bigint(20) NOT NULL,
   `audit_fecha_upd` timestamp NULL DEFAULT NULL,
   `audit_user_upd` bigint(20) DEFAULT NULL,
@@ -178,12 +212,12 @@ insert  into `encuestas`(`encuesta_id`,`descripcion`,`detalle`,`estado_encuesta_
 CREATE TABLE `encuestas_bloques` (
   `bloque_id` int(11) NOT NULL AUTO_INCREMENT,
   `encuesta_id` int(11) NOT NULL,
-  `bloque_estructura_id` int(11) NOT NULL DEFAULT '1',
+  `bloque_estructura_id` int(11) NOT NULL DEFAULT 1,
   `titulo` varchar(200) DEFAULT NULL,
-  `estado_registro_id` int(11) NOT NULL DEFAULT '1',
-  `orden` int(11) NOT NULL DEFAULT '100',
-  `detalle` text,
-  `visible` tinyint(1) NOT NULL DEFAULT '1',
+  `estado_registro_id` int(11) NOT NULL DEFAULT 1,
+  `orden` int(11) NOT NULL DEFAULT 100,
+  `detalle` text DEFAULT NULL,
+  `visible` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`bloque_id`),
   KEY `FK_encuestas_bloques` (`encuesta_id`),
   KEY `FK_encuestas_bloques_reg` (`estado_registro_id`),
@@ -234,7 +268,7 @@ CREATE TABLE `permission_role` (
 
 /*Data for the table `permission_role` */
 
-insert  into `permission_role`(`permission_id`,`role_id`) values (1,1),(2,1),(3,1),(4,1),(5,1),(6,1);
+insert  into `permission_role`(`permission_id`,`role_id`) values (1,1),(2,1),(3,1),(4,1),(5,1),(6,1),(7,1);
 
 /*Table structure for table `permissions` */
 
@@ -249,13 +283,13 @@ CREATE TABLE `permissions` (
 
 /*Data for the table `permissions` */
 
-insert  into `permissions`(`id`,`name`,`label`,`created_at`,`updated_at`) values (1,'editar_usuarios','Editar Usuarios',NULL,NULL),(2,'editar_roles','Editar Roles',NULL,NULL),(3,'ver_encuestas','Ver Encuestas',NULL,NULL),(4,'editar_encuestas','Editar Encuestas',NULL,NULL),(5,'ver_personas','Ver Personas',NULL,NULL),(6,'editar_personas','Editar Personas',NULL,NULL),(7,'editar permisos','Editar Permisos',NULL,NULL);
+insert  into `permissions`(`id`,`name`,`label`,`created_at`,`updated_at`) values (1,'editar_usuarios','Editar Usuarios',NULL,NULL),(2,'editar_roles','Editar Roles',NULL,NULL),(3,'ver_encuestas','Ver Encuestas',NULL,NULL),(4,'editar_encuestas','Editar Encuestas',NULL,NULL),(5,'ver_personas','Ver Personas',NULL,NULL),(6,'editar_personas','Editar Personas',NULL,NULL),(7,'editar_permisos','Editar Permisos',NULL,NULL);
 
 /*Table structure for table `personas` */
 
 CREATE TABLE `personas` (
   `persona_id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `estado_registro_id` int(11) NOT NULL DEFAULT '1',
+  `estado_registro_id` int(11) NOT NULL DEFAULT 1,
   `dni` int(11) DEFAULT NULL,
   `cuit` int(11) DEFAULT NULL,
   `nombres` varchar(150) DEFAULT NULL,
@@ -278,7 +312,7 @@ CREATE TABLE `pregunta_opciones` (
   `pregunta_id` int(11) NOT NULL,
   `opcion` varchar(100) DEFAULT NULL,
   `opcion_estructura_id` int(11) NOT NULL,
-  `estado_registro_id` int(11) NOT NULL DEFAULT '1',
+  `estado_registro_id` int(11) NOT NULL DEFAULT 1,
   PRIMARY KEY (`opcion_id`),
   KEY `FK_pregunta_opciones` (`estado_registro_id`),
   KEY `FK_pregunta_opciones_preg` (`pregunta_id`),
@@ -303,7 +337,8 @@ CREATE TABLE `preguntas` (
   `pregunta_estructura_id` int(11) NOT NULL,
   `funcion` varchar(50) DEFAULT NULL,
   `mascara` varchar(50) DEFAULT NULL,
-  `orden` int(11) NOT NULL DEFAULT '100',
+  `orden` int(11) NOT NULL DEFAULT 100,
+  `codigo_externo` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`pregunta_id`),
   KEY `FK_preguntas` (`pregunta_tipo_id`),
   KEY `FK_preguntas_encuesta` (`encuesta_id`),
@@ -315,15 +350,15 @@ CREATE TABLE `preguntas` (
 
 /*Data for the table `preguntas` */
 
-insert  into `preguntas`(`pregunta_id`,`encuesta_id`,`bloque_id`,`pregunta`,`pregunta_tipo_id`,`pregunta_estructura_id`,`funcion`,`mascara`,`orden`) values (1,1,1,'Nivel de Escolaridad Alcanzado',1,3,NULL,NULL,20),(2,1,1,'Dirección	',1,2,NULL,NULL,30),(3,1,1,'Provincia',1,3,'provincias',NULL,40),(4,1,1,'Municipio',1,3,'municipios',NULL,50),(5,1,1,'Localidad',1,3,'localidades',NULL,60),(6,1,1,'Teléfono particular',1,2,NULL,NULL,70),(7,1,1,'Teléfono de contacto',1,2,NULL,NULL,80),(8,1,1,'Email',1,2,NULL,'mail',90);
+insert  into `preguntas`(`pregunta_id`,`encuesta_id`,`bloque_id`,`pregunta`,`pregunta_tipo_id`,`pregunta_estructura_id`,`funcion`,`mascara`,`orden`,`codigo_externo`) values (1,1,1,'Nivel de Escolaridad Alcanzado',1,3,NULL,NULL,20,NULL),(2,1,1,'Dirección	',1,2,NULL,NULL,30,NULL),(3,1,1,'Provincia',1,3,'provincias',NULL,40,NULL),(4,1,1,'Municipio',1,3,'municipios',NULL,50,NULL),(5,1,1,'Localidad',1,3,'localidades',NULL,60,NULL),(6,1,1,'Teléfono particular',1,2,NULL,NULL,70,NULL),(7,1,1,'Teléfono de contacto',1,2,NULL,NULL,80,NULL),(8,1,1,'Email',1,2,NULL,'mail',90,NULL);
 
 /*Table structure for table `preguntas_estructuras` */
 
 CREATE TABLE `preguntas_estructuras` (
-  `pregunta_estructura_id` int(11) NOT NULL DEFAULT '0',
+  `pregunta_estructura_id` int(11) NOT NULL DEFAULT 0,
   `descripcion` varchar(100) DEFAULT NULL,
   `detalle` varchar(200) DEFAULT NULL,
-  `estado_registro_id` int(11) NOT NULL DEFAULT '1'
+  `estado_registro_id` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `preguntas_estructuras` */
@@ -336,7 +371,7 @@ CREATE TABLE `preguntas_tipos` (
   `pregunta_tipo_id` int(11) NOT NULL AUTO_INCREMENT,
   `descripcion` varchar(100) DEFAULT NULL,
   `detalle` varchar(200) DEFAULT NULL,
-  `estado_registro_id` int(11) NOT NULL DEFAULT '1',
+  `estado_registro_id` int(11) NOT NULL DEFAULT 1,
   PRIMARY KEY (`pregunta_tipo_id`),
   KEY `FK_preguntas_tipos` (`estado_registro_id`),
   CONSTRAINT `FK_preguntas_tipos` FOREIGN KEY (`estado_registro_id`) REFERENCES `cat_estados_registros` (`estado_registro_id`)
@@ -374,7 +409,7 @@ CREATE TABLE `roles` (
 
 /*Data for the table `roles` */
 
-insert  into `roles`(`id`,`name`,`label`,`created_at`,`updated_at`) values (1,'Admin','Adm. General','2016-06-20 19:41:55','2018-02-23 16:20:23'),(2,'Supervision','Supervision Deso','2022-03-08 11:25:26','2022-03-08 11:26:52'),(3,'Carga','Carga','2022-03-08 11:25:28','2022-03-08 11:28:32'),(4,'Soporte','Soporte Usuarios','2022-03-08 11:26:01','2022-03-08 11:28:43');
+insert  into `roles`(`id`,`name`,`label`,`created_at`,`updated_at`) values (1,'admin','Adm. General','2016-06-20 19:41:55','2018-02-23 16:20:23'),(2,'supervision','Supervision Deso','2022-03-08 11:25:26','2022-03-08 11:26:52'),(3,'carga','Carga','2022-03-08 11:25:28','2022-03-08 11:28:32'),(4,'soporte','Soporte Usuarios','2022-03-08 11:26:01','2022-03-08 11:28:43');
 
 /*Table structure for table `users` */
 

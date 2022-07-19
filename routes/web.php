@@ -9,6 +9,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::resource('usuarios',             'UsuariosController');
     Route::get('logs',                      'UsuariosController@online');
     Route::resource('roles',                'RoleController');
+    Route::resource('permisos',                'PermisosController');
     Route::get('logout',                    'AdminController@logout');
 
     Route::group(array('prefix' => 'api/v1'), function(){

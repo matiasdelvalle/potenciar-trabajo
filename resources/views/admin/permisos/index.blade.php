@@ -28,30 +28,10 @@
 	              </tr>
 	            </thead>
 				<tbody>
-				@foreach ($users as $user)
-					<tr>
-						<td class="col_1">{{ $user->name.' '.$user->apellido }}</td>
-						<td class="col_4">
-							@if($user->roles)
-							<ul data-bind="foreach: { data: roles, as: 'role' }" style="margin-bottom: 0px">
-								@foreach($user->roles as $role)
-								<li>
-									<a href="{{ url('admin/roles'.'/'.$role->id.'/edit' ) }}" style="color: inherit;">{{ $role->label }}</a>
-								</li>
-								@endforeach
-						    </ul>
-						    @endif
-						</td>
-						<td class="col_1 text-center">
-					        <a class="btn-sm btn-success" href="{{ url('admin/permisos/'.$user->id.'/edit') }}">Detalle</a>
-						</td>
-		            </tr>
-				@endforeach
+
 	            </tbody>
 			</table>
-			{!! $users->appends(
-				['term' => app('request')->input('term')]
-			)->render() !!}
+
 			<a href="{{ url('admin/usuarios/create') }}" class="btn btn-create" data-toggle="tooltip" title="Agregar Usuario" data-placement="left">
 				<i class="s-iconz__size icon-File-Edit"></i>
 			</a>
